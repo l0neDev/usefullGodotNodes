@@ -1,0 +1,9 @@
+node with script.
+
+standart Ysort godot node sorts view of objects (whitch behind and whitch in front) on 2D scene by their Y position that is useful, but!
+...but sometimes we need to keep track of which node are closer to look, this one solves that.
+it sorts Ysort nodes children in tree by ther Ypos, so the closest/farest one will always be the first child of the Ysort node.
+
+important: it sorts ONLY nodes that inherits from (or are) <Node2D>!
+
+note: script are embeded in saved scene (but copy of it are here as well)
