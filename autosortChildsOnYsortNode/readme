@@ -10,5 +10,3 @@ speed: It takes 14ms to sort 11 (1 added on the fly to meet all conditions in so
 (old intel 2.8Ghz and ddr3 1600 mem).
 
 important: it sorts ONLY nodes that inherits from (or are) <Node2D>!
-
-note: script are embeded in saved scene (but copy of it are here as well)
