@@ -1,0 +1,21 @@
+simple resource loader.
+keep track of loading done percent (from minValue to maxValue) by signal [loadingPercentChanged(float newValue)]
+and returns list of loaded resources by signal [lodingDone*(List<*> *)]
+
+usage:
+loaderNode.StartLoadingResources(list<string> resourcesPaths, string subfolder) - loads any resources specified in paths list
+and emits signal [loadingDoneResources(List<Resource> loadedResources)] when done, to return list of loaded resources or null if none loaded.
+Returns false if something already loading, or true if successfuly started.
+
+loaderNode.StartLoadingScenes(List<string> scenesPaths, string subfolder) - loads PackedScenes specified in paths list and
+emits signal [loadingDoneScenes(List<PackedScene> loadedScenes)] when done, to return list of loaded scenes or null if none loaded.
+Returns false if something already loading, or true if successfuly started.
+
+don't forget to connect loaderNode's signals to get your results and keep track of the loading process.
+
+note: full paths to resources MUST be absolete, so check your loadRootDir ("res://" by default), your subfolder param, and paths to be files with extensions!
+Example: you want to load all platforms on your level one,
+full paths shold be like -> "res://level1/upperPlatforms/firstPlatform.tscn", "res://level1/lowerPlatforms/secondPlatform.tscn" etc.,
+so variables shold be like -> loadRootDir = "res://", subfolder = "level1", paths = "upperPlatforms/firstPlatform.tscn", "lowerPlatforms/secondPlatform.tscn" etc.
+
+P.S. you can load scenes with [StartLoadingResouces] as well, but don't forget to cast em in PackedScene after that. To avoid those misses just use 2nd func.
