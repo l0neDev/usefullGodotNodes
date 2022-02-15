@@ -13,7 +13,8 @@ Returns false if something already loading, or true if successfuly started.
 
 don't forget to connect loaderNode's signals to get your results and keep track of the loading process.
 
-note: full paths to resources MUST be absolete, so check your loadRootDir ("res://" by default), your subfolder param, and paths to be files with extensions!
+note: full paths to resources MUST be absolete, so check your loadRootDir ("res://" by default), your subfolder param, and paths to be files with extension,
+all case sensetive!
 Example: you want to load all platforms on your level one,
 full paths shold be like -> "res://level1/upperPlatforms/firstPlatform.tscn", "res://level1/lowerPlatforms/secondPlatform.tscn" etc.,
 so variables shold be like -> loadRootDir = "res://", subfolder = "level1", paths = "upperPlatforms/firstPlatform.tscn", "lowerPlatforms/secondPlatform.tscn" etc.
