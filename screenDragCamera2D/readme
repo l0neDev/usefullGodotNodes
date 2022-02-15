@@ -1,0 +1,13 @@
+standart godot's camera2D node with screen drag feature.
+
+editor:
+[dragFunctionEnabled] switch to enable/disable drag function
+[dragSpeed] speed of camera follow drag (if set more than 1 - I strongly recomend to set camera smoothing!)
+
+signals:
+[screenDragStarted(Vector2 position)] emits on start of drag action, returns start position of it
+[screenDragEnded(Vector2 position)] emits on dragging end, returns end drag position
+[dragFuncEnabled] emits when dragging enabled
+[dragFuncDisabled] emits when dragging disabled
+
+note: its for tochscreen by default. To use it with mouse simply turn on "emulate touch from mouse" in project settings > input devices > pointing.
