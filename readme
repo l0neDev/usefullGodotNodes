@@ -1,18 +1,13 @@
 Collection of reusable godot's nodes that solves some tasks and implementing some features, used in my projects.
 
-
-
 I understand that most of the features was already created before me etc. but still here we go! (:
-
-
 
 Feel free to make use of them, if find some usefull ones for your projects \(^_^)/
 
 
-
-note: all scrips are writen in C#, idk GDScrip, sry. tested in Godot 3.4.2.stable.mono.
-scripts are embeded in saved scenes (but copy of them are there as well)
-
+note: all scrips are writen in C#, idk GDScrip, sry.
+All of this made and tested in Godot 3.4.2.stable.mono.
+Scripts are embeded in saved scenes (but copy of them are there as well)
 
 
 P.S. sorry for my english, im not native. hope it understandable (:
