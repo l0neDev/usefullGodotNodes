@@ -3,7 +3,7 @@ node with script.
 standart Ysort godot node sorts view of objects (whitch behind and whitch in front) on 2D scene by their Y position that is useful, but!
 ...but sometimes we need to keep track of which node are closer to look, this one solves that.
 it sorts Ysort nodes children in tree by ther Ypos, so the closest/farest one will always be the first child of the Ysort node.
-Sort func call every frame (if this Ysort node's SortEnabled = true AND [sortChildsEnabled = true]) but do operations only if order on screen or/and
+Sort func call every frame (if this Ysort node's SortEnabled = true AND [sortChildsEnabled] = true) but do operations only if order on screen or/and
 number of child nodes changed (only Node2D type, if you adds some other nodes it wont do jobs and wont slow your game).
 
 editor: 2 variables - [sortChildsEnabled] to enable or disable sorting and [orderByClosest] if disabled sort func will sort childs by farest view Node2D object.
