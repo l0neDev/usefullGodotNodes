@@ -11,7 +11,7 @@ using System.Linq;
 
 class LoaderNode : Node
 {
-    #region signals to connect
+    #region signals
 
     [Signal]
     delegate void loadingPercentChanged(float newValue);
@@ -132,17 +132,17 @@ class LoaderNode : Node
 
                 if (!ResourceLoader.Exists(fullPath)) //check for existence
                 {
-                    GD.PushWarning(\"resource [\" + fullPath + \"] not found, skipping.\");
+                    GD.PushWarning(\"resource [\" + fullPath + \"] not recognized, skipping.\");
 
                     loadingPercentValue += loadingPercentStep;
                     continue;
                 }
 
-                loadedOne = GD.Load(path); //try to load
+                loadedOne = GD.Load(fullPath); //try to load
 
                 if (loadedOne == null) //if failed
                 {
-                    GD.PushWarning(\"resource [\" + fullPath + \"] not recognized, skipping.\");
+                    GD.PushWarning(\"resource [\" + fullPath + \"] loading failed, skipping.\");
                     loadingPercentValue += loadingPercentStep;
 
                     continue;
@@ -166,10 +166,31 @@ class LoaderNode : Node
 
             if (signal == nameof(loadingDoneScenes)) //if we was loading scenes -> safely cast loaded resources to them
             {
-                EmitSignal(signal, loadedResources.OfType<PackedScene>().ToList());
+                List<PackedScene> scenesList = loadedResources.OfType<PackedScene>().ToList();
+
+                if (scenesList == null || scenesList.Count == 0)
+                {
+                    GD.PushWarning(\"something went wrong. Unable to cast loaded resources. No scenes loaded.\");
+
+                    EmitSignal(signal, null);
+
+                    return;
+                }
+
+                if (resourcesPaths.Count > scenesList.Count)
+                {
+                    GD.Print(scenesList.Count, \" scenes loaded, \", resourcesPaths.Count - scenesList.Count, \" skipped.\");
+                }
+
+                EmitSignal(signal, scenesList);
             }
             else
             {
+                if (resourcesPaths.Count > loadedResources.Count)
+                {
+                    GD.Print(loadedResources.Count, \" resources loaded, \", resourcesPaths.Count - loadedResources.Count, \" skipped.\");
+                }
+
                 EmitSignal(signal, loadedResources);
             }
         });        
