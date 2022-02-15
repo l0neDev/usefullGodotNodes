@@ -7,6 +7,47 @@ using System.Collections.Generic;
 
 class YSort : Godot.YSort
 {
+    #region signals to emit
+    [Signal]
+    delegate void childrensSortEnabled(); //emits when [sortChildsEnabled] changed on true;
+    [Signal]
+    delegate void childrensSortDisabled(); //emits when [sortShildsEnabled] changed on false;
+    [Signal]
+    delegate void sortingOrderChanged(); //emits when [orderByClosest] changed;
+    #endregion
+
+    #region editor variables
+    private bool _sortChildsEnabled = true;
+    /// <summary>
+    /// sort func will be called if true, and not if false
+    /// </summary>
+    [Export]
+    public bool sortChildsEnabled
+    {
+        get { return _sortChildsEnabled; }
+        set
+        {
+            _sortChildsEnabled = value;
+            if (_sortChildsEnabled) EmitSignal(nameof(childrensSortEnabled));
+            else EmitSignal(nameof(childrensSortDisabled));
+        }
+    }
+
+    private bool _orderByClosest = true;
+    /// <summary>
+    /// what child will be firts in tree? closest if true, and farest if false
+    /// </summary>
+    [Export]
+    public bool orderByClosest
+    {
+        get { return _orderByClosest; }
+        set
+        {
+            _orderByClosest = value;
+            EmitSignal(nameof(sortingOrderChanged));
+        }
+    }
+    #endregion
     /// <summary>
     /// Node2D inherited (or are) childrens of this Ysort node
     /// </summary>
@@ -21,14 +62,14 @@ class YSort : Godot.YSort
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        if (SortEnabled) SortNodesByY();
+        if (SortEnabled && sortChildsEnabled) SortNodesByY();
     }
 
     /// <summary>
     /// sorting func, result are - closest/farest (closest by default) node will be the first child of this Ysort node
     /// </summary>
     /// <param name="closest">sort by closest or farest?</param>
-    private void SortNodesByY(bool closest = true)
+    private void SortNodesByY()
     {
         int Node2DChildsCount = GetChildren().OfType<Node2D>().Count();
 
@@ -45,7 +86,7 @@ class YSort : Godot.YSort
         //always doing sort func if we have some childs
         IEnumerable<Node2D> sortedChilds;
 
-        if (closest)
+        if (orderByClosest)
         {
             sortedChilds = YsortChilds.OrderByDescending(child => child.Position.y);
         }
@@ -67,7 +108,7 @@ class YSort : Godot.YSort
         foreach(var child in YsortChilds)
         {
             MoveChild(child, moveToIndex);
-            moveToIndex++; //and for next iterration(s) of foreach we just increase index
+            moveToIndex++; //and for next iterration of foreach we just increase index
         }
     }
 }
