@@ -1,0 +1,68 @@
+generic C# GOAP implementation, you can use it with any engine or even not for games, to do that just edit Helper class DebugLog func (see code comments for more info).
+
+note: it's a simple version, optimized for humans, not for performance. but still not so slow (:
+
+usage:
+{the GOAP in simple words, just google it for more info}
+main func is in Planner class, called GetPlan() it need 3 args to work with, its Conditions, Actions and Goal.
+Condition is an variable that have true of false state, like "have money" = false;
+Action is not the actual action, its some abstract func that have name, preconditions - must be met to use this action and postconditions - the result of this action,
+like name = "get some money". pre: "have work to do" = true, "have stamina for work" = true. post: "work finished" = true, "have money" = true. and every Action have
+its cost! more cost > less motivation to do this action (:
+Goal is an Actors motivation to do something, like name = "buy new notebook". conditions to reach this goal: "have money" = true.
+the func will make action chain for actor to reach this Goal if its possible with defined Conditions, and Actions.
+
+let's pretend we have some character (actor) who needs to kill the enemy. It can carry one item at time, like weap with 1 hit, heal item that can be used once
+and bomb that oneshots both enemy and actor. actor and enemy wont die from a single shot of weap, but get hurt from that. Enemy always have a weap. From the start
+enemy and actor dunno where they are, so should find eachother for start, but both know that they alive and here somewhere (:
+
+so the start conditions for actor in our situation looks like:
+"alive" = true.
+"enemy alive" = true.
+"hurt" = false.
+"enemy hurt" = false.
+"see enemy" = false.
+"emeny see me" = false.
+"close to enemy" = false.
+"have weapon" = false.
+"have heal item" = false.
+"have bomb" = false.
+
+the goal looks like:
+name = "defeat enemy", conditions: "enemy alive" = false.
+
+lets make some actions that our actor can do:
+we need to know how to find weapon, right? and enemy shouldnt see us at the moment, cuz it will kill us. and if we are looking for weapon we shouldn have any other item,
+cuz we can carry only one item at once.
+"find weapon": pre: "have bomb = false", "have heal item" = false, "have weapon" = false, "enemy see me" = false. post: "have weapon" = true. cost = 0.
+same for heal item.
+"find heal item": pre: "have bomb = false", "have heal item" = false, "have weapon" = false, "enemy see me" = false. post: "have heal item" = true. cost = 0.
+and almost same for bomb, but we dont want to suicide if its possible, so lets increase cost for that action.
+"find bomb": pre: "have bomb = false", "have heal item" = false, "have weapon" = false, "enemy see me" = false. post: "have bomb" = true. cost = 1.
+Now we shold learn how to find enemy and attack it.
+"find enemy": pre: "see enemy" = false, post: "see enemy" = true. (but enemy will see us too) "enemy see me" = true. cost = 0.
+"chase enemy": pre: "see enemy" = true, "close to enemy" = false. post "close to enemy" = true. cost = 0.
+"attack enemy": pre: "have weapon" = true, "close to enemy = true". post: "enemy hurt" = true, (but enemy attack us back) "hurt" = true, (and weap had one hit, remember?)
+"have weapon" = false. cost = 0.
+or we can suicide and take the anemy with us (goal is to defeat enemy not matter what way)
+"suicide with enemy": pre: "have bomb" = true, "close to enemy" = true. post: "enemy alive" = false, "alive" = false. (we want to live, so lets increase cost) cost = 1.
+and we have to finish hurt enemy after attack, but we also hurt, so we need to fall back and heal.
+"fall back": pre: "close to enemy" = true. post: "close to enemy" = false. cost = 0.
+we cant look for heal item while enemy see's us, cuz it will chase us, so we gonna run away (:
+"run away": pre: "close to enemy" = false, "enemy see me" = true. post: "enemy see me" = false, (and we also loose sight of enemy), "see enemy" = false. cost = 0.
+"heal yourself": pre: "have heal item" = true, (and not on attack range or heal just pointless, cuz enemy hurt us again) "close to enemy" = false,
+"hurt" = true. post: "hurt" = false, "have heal item" = false. cost = 0.
+and finaly we need to finish enemy.
+"finish enemy": pre: "enemy hurt" = true, (we shold be healthy, or we'll suicide) "hurt" = false, "have weapon" = true, "close to enemy" = true. post: "hurt" = true,
+"enemy alive" = false. cost = 0.
+
+done! with those actions we can reach our goal! now just run Planner, and it will make all posible action chains, and return cheapest (action cost, remember?) or shortest
+(if we want so) chain, so we just need to follow plan (:
+
+note: there is only planner algo, u need to implement ur own Conditions observer to change goal/remake plan if some condition(s) changed. Something like "eye sensor" func
+that signals when "see enemy" changes etc.
+And yes, all actions Planner returns are abstract ones, so make funcs for your actor to actually do those actions.
+
+Let me know if you find some issues, or just about your experience using this (:
+
+P.S. the initial example are included. See code comments/debug messages if u still not understand something. Sorry for my english (^_^')
