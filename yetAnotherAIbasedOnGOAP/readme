@@ -1,4 +1,5 @@
-generic C# GOAP implementation, you can use it with any engine or even not for games, to do that just edit Helper class DebugLog func (see code comments for more info).
+generic C# GOAP (Goal Oriented Action Planning) implementation, you can use it with any engine or even not for games,
+to do that just edit Helper class DebugLog func (see code comments for more info).
 
 note: it's a simple version, optimized for humans, not for performance. but still not so slow (:
 
